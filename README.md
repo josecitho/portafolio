@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Portafolio — Proyecto Next.js
 
-## Getting Started
+Este repositorio contiene un portafolio personal creado con Next.js y Prisma (SQLite).
 
-First, run the development server:
+Características principales:
+- Next.js 15
+- React 19
+- Tailwind CSS
+- Prisma + SQLite (archivo: `prisma/dev.db`)
 
-```bash
+## Requisitos
+- Node.js 18+ (recomendado)
+- npm o pnpm
+
+## ¿Cómo ejecutar en desarrollo?
+
+Abre una terminal en la raíz del proyecto y ejecuta:
+
+```powershell
+cd c:\Users\josev\Escritorio\DeTodo\portafolio
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La aplicación estará disponible en `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Prisma Studio (UI para la base de datos)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Para abrir la interfaz gráfica de la base de datos (SQLite) usa:
 
-## Learn More
+```powershell
+npm run studio
+```
 
-To learn more about Next.js, take a look at the following resources:
+Prisma Studio abrirá en `http://localhost:5555` y te permitirá ver/editar las tablas (la base de datos se encuentra en `prisma/dev.db`).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Semillas (seed)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Si quieres poblar la base de datos con datos de ejemplo, ejecuta:
 
-## Deploy on Vercel
+```powershell
+npm run seed
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts útiles
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` — Ejecuta Next.js en modo desarrollo
+- `npm run build` — Construye para producción
+- `npm start` — Inicia la app construida
+- `npm run studio` — Abre Prisma Studio
+- `npm run seed` — Ejecuta el script de seed
+- `npm run lint` — Ejecuta ESLint
+- `npm run lint:fix` — Intenta corregir problemas con ESLint
+
+## Archivos importantes
+
+- `prisma/schema.prisma` — Definición del modelo `Project`
+- `prisma/dev.db` — Base de datos SQLite (archivo)
+- `src/app/page.js` — Página principal
+- `src/lib/prisma.js` — Cliente Prisma
+
+## Siguientes pasos sugeridos
+
+- Actualizar enlaces de redes sociales en `src/app/page.js` con tus URLs reales.
+- Añadir una pequeña página de administración para crear proyectos desde la UI.
+- Integrar Prettier / CI para formateo y lint en commits.
+
+Si quieres, puedo aplicar automáticamente los siguientes cambios: actualizar los enlaces, crear un seed con datos de ejemplo y agregar `.gitignore`.
