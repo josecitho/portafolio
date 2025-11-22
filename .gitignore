@@ -16,6 +16,7 @@
 # next.js
 /.next/
 /out/
+/dist/
 
 # production
 /build
@@ -39,3 +40,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/src/generated/prisma
+
+# Local editor settings
+.vscode/
+
+# Local sqlite DB created for development
+prisma/dev.db
+
+# logs
+logs/
+*.log
