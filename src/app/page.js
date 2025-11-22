@@ -8,6 +8,7 @@ import TabsController from "@/components/ui/TabsController";
 import GuestbookAccess from "@/components/GuestbookAccess";
 import Image from "next/image"; 
 import { FileText, Download } from "lucide-react"; 
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   let projects = [];

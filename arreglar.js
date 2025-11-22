@@ -1,0 +1,42 @@
+const fs = require('fs');
+
+// Este es el contenido PERFECTO de tu package.json
+const pkg = {
+  "name": "portafolio",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "studio": "npx prisma studio",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "lucide-react": "^0.454.0",
+    "next": "15.0.2",
+    "pg": "^8.13.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-toastify": "^10.0.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "15.0.2",
+    "postcss": "^8",
+    "prisma": "^6.19.0",
+    "tailwindcss": "^3.4.1"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+};
+
+// Esto escribe el archivo en tu disco duro
+fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+console.log('✅ ¡LISTO! El archivo package.json ha sido reparado.');
