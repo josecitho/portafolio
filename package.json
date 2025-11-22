@@ -4,14 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "studio": "npx prisma studio",
     "seed": "node prisma/seed.js"
   },
-  
   "dependencies": {
     "@prisma/client": "^6.19.0",
     "lucide-react": "^0.554.0",
@@ -32,3 +31,5 @@
   "engines": {
     "node": "20.x"
   }
+}
+
