@@ -1,19 +1,43 @@
 'use client'
 import { useState } from 'react'
-import { ShieldAlert, Lock, Trash2, Terminal } from 'lucide-react' 
-import { eliminarFirma } from '@/app/actions' // Importamos la función de destruir
+import { ShieldAlert, Lock, Trash2, Terminal, Mail } from 'lucide-react' 
+import { eliminarFirma } from '@/app/actions'
 
-export default function AdminLogin({ mensajes }) { // Recibimos los mensajes como prop
+export default function AdminLogin({ mensajes }) {
   const [access, setAccess] = useState(false)
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
-    // 👇 CONTRASEÑA: admin123 (Cámbiala si quieres)
-    if (password === 'admin123') {
-      setAccess(true)
-    } else {
-      alert('⚠️ ACCESO DENEGADO')
+    setLoading(true)
+    setError('')
+
+    try {
+      // Llamamos a nuestra API para validar las credenciales
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        // ✅ Login exitoso
+        setAccess(true)
+      } else {
+        // ❌ Credenciales incorrectas
+        setError(data.message || 'Acceso denegado')
+      }
+    } catch (err) {
+      setError('Error de conexión. Intenta nuevamente.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -27,15 +51,46 @@ export default function AdminLogin({ mensajes }) { // Recibimos los mensajes com
           <p className="text-red-900 text-xs mb-8">AUTHORIZED PERSONNEL ONLY</p>
           
           <form onSubmit={handleLogin} className="flex flex-col gap-4">
-            <input 
-              type="password" 
-              placeholder="PASSCODE" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-black border border-red-800 p-3 text-red-500 text-center tracking-[0.5em] focus:border-red-500 focus:outline-none placeholder-red-900/30 rounded"
-            />
-            <button className="bg-red-900/20 border border-red-800 text-red-500 py-3 hover:bg-red-600 hover:text-black transition-all font-bold tracking-widest uppercase rounded text-sm">
-              [ Unlock_System ]
+            {/* CAMPO DE CORREO */}
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-800" />
+              <input 
+                type="email" 
+                placeholder="ADMIN EMAIL" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full bg-black border border-red-800 p-3 pl-10 text-red-500 text-center tracking-wider focus:border-red-500 focus:outline-none placeholder-red-900/30 rounded"
+              />
+            </div>
+
+            {/* CAMPO DE CONTRASEÑA */}
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-800" />
+              <input 
+                type="password" 
+                placeholder="PASSCODE" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full bg-black border border-red-800 p-3 pl-10 text-red-500 text-center tracking-[0.5em] focus:border-red-500 focus:outline-none placeholder-red-900/30 rounded"
+              />
+            </div>
+
+            {/* MENSAJE DE ERROR */}
+            {error && (
+              <div className="bg-red-950/30 border border-red-800 text-red-400 p-3 rounded text-xs animate-pulse">
+                ⚠️ {error}
+              </div>
+            )}
+
+            {/* BOTÓN DE LOGIN */}
+            <button 
+              type="submit"
+              disabled={loading}
+              className="bg-red-900/20 border border-red-800 text-red-500 py-3 hover:bg-red-600 hover:text-black transition-all font-bold tracking-widest uppercase rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? '[ Verifying... ]' : '[ Unlock_System ]'}
             </button>
           </form>
         </div>
