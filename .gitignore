@@ -52,3 +52,4 @@ prisma/dev.db
 # logs
 logs/
 *.log
+.env.local
