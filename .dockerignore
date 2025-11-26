@@ -1,0 +1,13 @@
+touch .dockerignore
+```
+
+Y pega:
+```
+node_modules
+npm-debug.log*
+.next
+out
+.git
+.env
+.env*.local
+.DS_Store
