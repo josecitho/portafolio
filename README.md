@@ -8,6 +8,7 @@ Portafolio personal desarrollado con Next.js 15, que incluye un libro de firmas 
 - [Tecnologías Utilizadas](#-tecnologías-utilizadas)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [Instalación y Configuración Local](#-instalación-y-configuración-local)
+- [Instalación y Ejecución con Docker](#-instalación-y-ejecución-con-docker)
 - [Variables de Entorno](#-variables-de-entorno)
 - [Base de Datos](#-base-de-datos)
 - [Panel de Administración](#-panel-de-administración)
@@ -52,6 +53,7 @@ Portafolio personal desarrollado con Next.js 15, que incluye un libro de firmas 
 
 ### Despliegue
 - **Vercel** - Plataforma de hosting y deployment
+- **Docker** - Containerización de la aplicación
 - **GitHub** - Control de versiones
 
 ---
@@ -61,7 +63,9 @@ Portafolio personal desarrollado con Next.js 15, que incluye un libro de firmas 
 ```
 portafolio-postgres-prisma/
 ├── prisma/
-│   └── schema.prisma          # Esquema de la base de datos
+│   ├── schema.prisma          # Esquema de la base de datos
+│   ├── migrations/            # Migraciones de Prisma
+│   └── seed.js               # Datos de prueba
 ├── public/                    # Archivos estáticos
 ├── src/
 │   ├── app/
@@ -79,8 +83,11 @@ portafolio-postgres-prisma/
 │   │   ├── AdminLogin.jsx     # Componente del login y panel admin
 │   │   └── ...                # Otros componentes
 │   └── lib/                   # Utilidades
+├── .dockerignore              # Archivos excluidos del build Docker
 ├── .env.local                 # Variables de entorno (no se sube a Git)
 ├── .gitignore                 # Archivos ignorados por Git
+├── docker-compose.yml         # Orquestación de servicios Docker
+├── Dockerfile                 # Configuración de imagen Docker
 ├── next.config.js             # Configuración de Next.js
 ├── package.json               # Dependencias del proyecto
 ├── postcss.config.js          # Configuración de PostCSS
@@ -148,7 +155,133 @@ portafolio-postgres-prisma/
 
 ---
 
-## 🔐 Variables de Entorno
+## 🐳 Instalación y Ejecución con Docker
+
+### Prerrequisitos Docker
+
+- **Docker Desktop** instalado y corriendo
+- **Git**
+
+### Pasos para Ejecutar con Docker
+
+1. **Clonar el repositorio y cambiar a la rama docker_deploy**
+   ```bash
+   git clone https://github.com/josecitho/portafolio.git
+   cd portafolio-postgres-prisma
+   git checkout docker_deploy
+   ```
+
+2. **Levantar todos los servicios**
+   ```bash
+   docker-compose up --build
+   ```
+   
+   Esto levantará automáticamente:
+   - ✅ **Aplicación Next.js** (puerto 3000)
+   - ✅ **PostgreSQL 15** (puerto 5432)
+   - ✅ **pgAdmin 4** (puerto 5050)
+
+3. **Insertar datos de prueba** (en otra terminal)
+   ```bash
+   docker-compose exec app npx prisma db seed
+   ```
+
+4. **Acceder a los servicios**
+   - **Portafolio:** http://localhost:3000
+   - **Panel Admin:** http://localhost:3000/admin
+   - **pgAdmin:** http://localhost:5050
+
+### 🔑 Credenciales Docker
+
+#### Admin del Portafolio
+- Email: `admin@tuportafolio.com`
+- Password: `admin123`
+
+#### pgAdmin (Gestión Visual de BD)
+- URL: http://localhost:5050
+- Email: `admin@admin.com`
+- Password: `admin123`
+
+#### Conexión PostgreSQL en pgAdmin
+Para conectar la base de datos en pgAdmin:
+1. Click derecho en "Servers" → "Register" → "Server"
+2. **Pestaña General:**
+   - Name: `Portafolio DB`
+3. **Pestaña Connection:**
+   - Host: `db` ⚠️ (importante: usar "db", no "localhost")
+   - Port: `5432`
+   - Database: `portafolio_db`
+   - Username: `portafolio_user`
+   - Password: `portafolio_password`
+   - ✅ Marcar "Save password"
+
+### 🐳 Comandos Docker Útiles
+
+```bash
+# Ver estado de contenedores
+docker-compose ps
+
+# Ver logs en tiempo real
+docker-compose logs -f
+
+# Detener todos los servicios
+docker-compose down
+
+# Detener y eliminar volúmenes (resetear BD)
+docker-compose down -v
+
+# Reiniciar un servicio específico
+docker-compose restart app
+
+# Ejecutar migraciones de Prisma
+docker-compose exec app npx prisma migrate deploy
+
+# Abrir Prisma Studio (interfaz visual)
+docker-compose exec app npx prisma studio
+# Luego abrir http://localhost:5555
+```
+
+### 📦 Arquitectura Docker
+
+```
+Docker Compose
+│
+├── 📦 portafolio-app (Next.js)
+│   ├── Puerto: 3000
+│   ├── Puerto: 5555 (Prisma Studio)
+│   └── Conecta a: portafolio-db
+│
+├── 🗄️ portafolio-db (PostgreSQL 15)
+│   ├── Puerto: 5432
+│   ├── Usuario: portafolio_user
+│   ├── Base de datos: portafolio_db
+│   └── Volumen persistente: postgres_data
+│
+└── 🔧 portafolio-pgadmin (pgAdmin 4)
+    ├── Puerto: 5050
+    └── Volumen persistente: pgadmin_data
+```
+
+### 🔧 Archivos Docker del Proyecto
+
+- **`Dockerfile`**: Configuración multi-stage para optimizar el tamaño de la imagen
+- **`docker-compose.yml`**: Orquestación de los 3 servicios (app, db, pgadmin)
+- **`.dockerignore`**: Archivos excluidos del build Docker
+- **`next.config.js`**: Configurado con `output: 'standalone'` para Docker
+- **`prisma/seed.js`**: Script de datos de prueba para la base de datos
+
+### ⚡ Ventajas de la Versión Docker
+
+- ✅ **Setup en segundos**: Un solo comando levanta todo
+- ✅ **Entorno consistente**: Funciona igual en todos los sistemas operativos
+- ✅ **Aislamiento**: No interfiere con otros proyectos locales
+- ✅ **pgAdmin incluido**: Gestión visual profesional de la base de datos
+- ✅ **Datos persistentes**: Los datos sobreviven a reinicios de contenedores
+- ✅ **Fácil de limpiar**: `docker-compose down` elimina todo sin dejar rastros
+
+---
+
+## 📝 Variables de Entorno
 
 ### Variables Requeridas
 
@@ -160,7 +293,8 @@ portafolio-postgres-prisma/
 
 ### Configuración por Ambiente
 
-- **Local**: Usa `.env.local`
+- **Local (sin Docker)**: Usa `.env.local`
+- **Docker**: Variables configuradas en `docker-compose.yml`
 - **Producción (Vercel)**: Configura en el dashboard de Vercel
 
 ⚠️ **IMPORTANTE**: El archivo `.env.local` NO se sube a Git por seguridad (está en `.gitignore`)
@@ -210,11 +344,14 @@ npx prisma migrate dev --name nombre_migracion
 
 # Generar cliente después de cambios
 npx prisma generate
+
+# Insertar datos de prueba
+npx prisma db seed
 ```
 
 ---
 
-## 🔒 Panel de Administración
+## 🔐 Panel de Administración
 
 ### Acceso
 
@@ -327,11 +464,12 @@ npm run lint         # Ejecuta ESLint
 npx prisma studio    # Abre interfaz visual de la base de datos
 npx prisma db push   # Sincroniza esquema con la base de datos
 npx prisma generate  # Genera cliente de Prisma
+npx prisma db seed   # Inserta datos de prueba
 ```
 
 ---
 
-## 🐛 Solución de Problemas Comunes
+## 🛠 Solución de Problemas Comunes
 
 ### Error: "Cannot find module 'autoprefixer'"
 ```bash
@@ -354,6 +492,17 @@ npm install -D autoprefixer postcss
 2. Asegúrate que la base de datos acepte conexiones externas
 3. Revisa que el usuario tenga permisos
 
+### Docker: Puerto ya en uso
+```bash
+# Ver qué está usando el puerto
+lsof -i :3000  # o :5432 o :5050
+
+# Detener todos los contenedores
+docker-compose down
+
+# O cambiar puertos en docker-compose.yml
+```
+
 ---
 
 ## 📝 Notas del Desarrollador
@@ -363,6 +512,13 @@ npm install -D autoprefixer postcss
 - **Por qué Next.js 15**: App Router, Server Components, mejor performance
 - **Por qué Prisma**: Type-safety, migraciones fáciles, excelente DX
 - **Por qué validación en servidor**: Seguridad, no se puede bypassear
+- **Por qué Docker**: Consistencia, portabilidad, fácil setup
+
+### Estructura de Ramas
+
+- **`main`**: Versión de producción en Vercel
+- **`conect_db`**: Implementación de Prisma con migraciones (Nota 2)
+- **`docker_deploy`**: Dockerización completa (Nota 3)
 
 ### Mejoras Futuras (Roadmap)
 
@@ -373,6 +529,7 @@ npm install -D autoprefixer postcss
 - [ ] Sistema de roles (admin, editor, viewer)
 - [ ] Rate limiting en API routes
 - [ ] Tests unitarios y de integración
+- [ ] CI/CD con GitHub Actions
 
 ---
 
@@ -393,6 +550,7 @@ Este proyecto es de código abierto y está disponible bajo la Licencia MIT.
 - Next.js Team por el excelente framework
 - Vercel por el hosting gratuito
 - Prisma por el increíble ORM
+- Docker por simplificar el despliegue
 - Comunidad de desarrolladores
 
 ---
