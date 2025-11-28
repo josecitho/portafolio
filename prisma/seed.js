@@ -9,7 +9,6 @@ async function main() {
   await prisma.project.deleteMany()
   console.log('🗑️  Datos anteriores eliminados')
 
-  // Mensajes del guestbook
   const guestbookData = await prisma.guestbook.createMany({
     data: [
       {
@@ -31,43 +30,49 @@ async function main() {
   })
   console.log(`✅ ${guestbookData.count} mensajes insertados en Guestbook`)
 
-  // TUS PROYECTOS REALES
+  // TUS 7 PROYECTOS REALES CON URLs CORRECTAS
   const projects = [
     {
-      title: 'hotel-reservas-laravel',
-      description: 'Hotel con reservas en Laravel',
-      url: 'https://hotel-reservas-laravel.vercel.app',
-      githubUrl: 'https://github.com/josesalazar/hotel-reservas-laravel',
-    },
-    {
-      title: 'CV Personal',
-      description: 'Proyectos e informacion personal',
-      url: 'https://cv-practica-2025.vercel.app',
+      title: 'cv-practica-2025',
+      description: 'CV Personal',
+      url: 'https://cv-practica-2025.netlify.app/',
       githubUrl: null,
     },
     {
       title: 'project-dashboard-2025',
-      description: 'Dashboard Demostracion',
-      url: 'https://project-dashboard-2025.vercel.app',
-      githubUrl: 'https://github.com/josesalazar/project-dashboard-2025',
+      description: 'Dashboard basico',
+      url: 'https://project-dashboard-2025.netlify.app/',
+      githubUrl: 'https://github.com/josecitho/Deashboard.git',
     },
     {
       title: 'mentha-salon-2025',
-      description: 'Pagina con reserva',
-      url: 'https://mentha-salon-2025.vercel.app',
-      githubUrl: 'https://github.com/josesalazar/mentha-salon-2025',
+      description: 'Peluqueria',
+      url: 'https://mentha-salon-2025.netlify.app/',
+      githubUrl: 'https://github.com/josecitho/Mentha.git',
     },
     {
       title: 'data-mentha-2025',
-      description: 'Base de Datos de los registros del salon',
-      url: 'https://data-mentha-2025.vercel.app',
-      githubUrl: 'https://github.com/josesalazar/data-mentha-2025',
+      description: 'DB de reservas pagina web',
+      url: 'data-mentha-2025.netlify.app',
+      githubUrl: 'https://github.com/josecitho/Database.git',
     },
     {
-      title: 'NextJs Dashboard',
-      description: 'Dashboard con NextJs',
+      title: 'ApiSegura',
+      description: 'API con Autenticacion',
       url: null,
-      githubUrl: 'https://github.com/josesalazar/nextjs-dashboard',
+      githubUrl: 'https://github.com/josecitho/ApiSegura.git',
+    },
+    {
+      title: 'hotel-reservas-laravel',
+      description: 'Implementado con Laravel y PHP',
+      url: 'https://hotel-reservas-laravel-production.up.railway.app/',
+      githubUrl: 'https://github.com/josecitho/hotel-reservas-laravel.git',
+    },
+    {
+      title: 'nextjs-dashboard',
+      description: 'Dashboard NextJS',
+      url: null,
+      githubUrl: 'https://github.com/josecitho/nextjs-dashboard.git',
     },
   ]
 
