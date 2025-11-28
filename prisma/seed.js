@@ -9,6 +9,7 @@ async function main() {
   await prisma.project.deleteMany()
   console.log('🗑️  Datos anteriores eliminados')
 
+  // Mensajes del guestbook
   const guestbookData = await prisma.guestbook.createMany({
     data: [
       {
@@ -30,24 +31,43 @@ async function main() {
   })
   console.log(`✅ ${guestbookData.count} mensajes insertados en Guestbook`)
 
+  // TUS PROYECTOS REALES
   const projects = [
     {
-      title: 'E-commerce de Ropa',
-      description: 'Tienda online completa con Next.js y PostgreSQL.',
-      url: 'https://tienda-ejemplo.com',
-      githubUrl: 'https://github.com/usuario/ecommerce',
+      title: 'hotel-reservas-laravel',
+      description: 'Hotel con reservas en Laravel',
+      url: 'https://hotel-reservas-laravel.vercel.app',
+      githubUrl: 'https://github.com/josesalazar/hotel-reservas-laravel',
     },
     {
-      title: 'Blog Personal',
-      description: 'Blog de tecnología optimizado para SEO.',
-      url: 'https://blog-ejemplo.com',
-      githubUrl: 'https://github.com/usuario/blog',
+      title: 'CV Personal',
+      description: 'Proyectos e informacion personal',
+      url: 'https://cv-practica-2025.vercel.app',
+      githubUrl: null,
     },
     {
-      title: 'Dashboard Analítico',
-      description: 'Panel de control con gráficos interactivos.',
-      url: 'https://dashboard-ejemplo.com',
-      githubUrl: 'https://github.com/usuario/dashboard',
+      title: 'project-dashboard-2025',
+      description: 'Dashboard Demostracion',
+      url: 'https://project-dashboard-2025.vercel.app',
+      githubUrl: 'https://github.com/josesalazar/project-dashboard-2025',
+    },
+    {
+      title: 'mentha-salon-2025',
+      description: 'Pagina con reserva',
+      url: 'https://mentha-salon-2025.vercel.app',
+      githubUrl: 'https://github.com/josesalazar/mentha-salon-2025',
+    },
+    {
+      title: 'data-mentha-2025',
+      description: 'Base de Datos de los registros del salon',
+      url: 'https://data-mentha-2025.vercel.app',
+      githubUrl: 'https://github.com/josesalazar/data-mentha-2025',
+    },
+    {
+      title: 'NextJs Dashboard',
+      description: 'Dashboard con NextJs',
+      url: null,
+      githubUrl: 'https://github.com/josesalazar/nextjs-dashboard',
     },
   ]
 
