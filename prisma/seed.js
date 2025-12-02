@@ -53,7 +53,7 @@ async function main() {
     {
       title: 'data-mentha-2025',
       description: 'DB de reservas pagina web',
-      url: 'data-mentha-2025.netlify.app',
+      url: 'https://data-mentha-2025.netlify.app/',
       githubUrl: 'https://github.com/josecitho/Database.git',
     },
     {

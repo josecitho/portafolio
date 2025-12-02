@@ -1,8 +1,8 @@
 export default function Socials() {
   const socials = [
-    { name: "LinkedIn", icon: "💼", url: "https://www.linkedin.com/in/tu-perfil" },
-    { name: "GitHub", icon: "🐙", url: "https://github.com/tu-usuario" },
-    { name: "Twitter", icon: "𝕏", url: "https://twitter.com/tu-usuario" },
+    { name: "LinkedIn", icon: "💼", url: "https://www.linkedin.com/in/jose-valdebenito-olivares-7b397a295" },
+    { name: "GitHub", icon: "🐙", url: "https://github.com/josecitho" },
+    { name: "Twitter", icon: "𝕏", url: "https://twitter.com/pepeithor" },
   ];
 
   return (
