@@ -30,6 +30,7 @@ async function main() {
   })
   console.log(`✅ ${guestbookData.count} mensajes insertados en Guestbook`)
 
+  
   // TUS 7 PROYECTOS REALES CON URLs CORRECTAS
   const projects = [
     {
