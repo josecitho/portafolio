@@ -42,7 +42,7 @@ services:
         condition: service_healthy
     networks:
       - portafolio-network
-    command: sh -c "npx prisma migrate deploy && node server.js"
+    command: sh -c "npx prisma migrate deploy && node prisma/seed.js && node server.js"
 
   # pgAdmin para visualizar la base de datos
   pgadmin:
