@@ -1,0 +1,24 @@
+services:
+  # App: usa imagen preparada en un registry (no contiene secretos en el repo)
+  app:
+    image: ${REGISTRY:-your-registry/portafolio}:latest
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - NODE_ENV=production
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+    ports:
+      - "3000:3000" # debe estar detrás de un reverse-proxy en producción
+    networks:
+      - web
+
+networks:
+  web:
+    driver: bridge
+
+# Notas:
+# - En producción se recomienda usar una base de datos gestionada y pasar
+#   DATABASE_URL via secrets/variables del entorno (no .env en el repo).
+# - No incluir pgAdmin en producción. Configure TLS/Reverse Proxy (Traefik/Nginx)
+#   fuera de este archivo o en un stack separado.

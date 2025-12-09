@@ -13,6 +13,7 @@ Portafolio personal desarrollado con Next.js 15, que incluye un libro de firmas 
 - [Base de Datos](#-base-de-datos)
 - [Panel de Administración](#-panel-de-administración)
 - [Despliegue en Vercel](#-despliegue-en-vercel)
+- [Despliegue en Producción](#-despliegue-en-producción)
 - [Scripts Disponibles](#-scripts-disponibles)
 
 ---
@@ -147,6 +148,30 @@ portafolio-postgres-prisma/
    ```bash
    npm run dev
    ```
+
+### Quick start para evaluadores
+
+Si quieres que un evaluador (por ejemplo, tu profesor) pueda clonar el repositorio y levantar todo con un solo comando, puedes usar el script incluido o el archivo `docker-compose.dev.yml`.
+
+- Git Bash / macOS / Linux:
+
+```bash
+cp .env.example .env && docker-compose -f docker-compose.dev.yml up --build
+```
+
+- PowerShell (Windows):
+
+```powershell
+Copy-Item .env.example .env; docker-compose -f docker-compose.dev.yml up --build
+```
+
+También hay scripts incluidos para facilitar esto:
+
+- `start-demo.sh` (Unix/Git Bash): `./start-demo.sh`
+- `start-demo.ps1` (PowerShell): `./start-demo.ps1`
+
+Estos scripts crean `./.env` desde `./.env.example` si no existe y luego ejecutan `docker-compose -f docker-compose.dev.yml up --build`.
+
 
 6. **Abrir en el navegador**
    ```
@@ -530,6 +555,22 @@ docker-compose down
 - [ ] Rate limiting en API routes
 - [ ] Tests unitarios y de integración
 - [ ] CI/CD con GitHub Actions
+
+---
+
+## 🌐 Despliegue en Producción
+
+Para desplegar esta aplicación en un entorno de producción de forma segura, consulta la guía completa en [`PRODUCTION.md`](./PRODUCTION.md).
+
+La guía incluye:
+- Configuración de CI/CD con GitHub Actions
+- Despliegue seguro con variables de entorno y secretos
+- Setup de base de datos administrada
+- HTTPS/TLS con reverse proxy
+- Monitoreo y logs
+- Comandos útiles y troubleshooting
+
+**Nota:** No uses `docker-compose.yml` en producción. Usa `docker-compose.prod.yml` (que lee secretos del entorno) y sigue la guía de `PRODUCTION.md`.
 
 ---
 
