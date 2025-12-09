@@ -5,8 +5,10 @@ services:
     image: postgres:15-alpine
     container_name: portafolio-db-dev
     restart: unless-stopped
-    env_file:
-      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-portafolio_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-portafolio_password}
+      POSTGRES_DB: ${POSTGRES_DB:-portafolio_db}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -14,7 +16,7 @@ services:
     networks:
       - portafolio-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-portafolio_user} -d ${POSTGRES_DB:-portafolio_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -25,15 +27,19 @@ services:
       dockerfile: Dockerfile
     container_name: portafolio-app-dev
     restart: unless-stopped
-    env_file:
-      - .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://portafolio_user:portafolio_password@db:5432/portafolio_db}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      NODE_ENV: development
     volumes:
       - ./:/app
       - /app/node_modules
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - portafolio-network
     command: npm run dev
@@ -42,8 +48,9 @@ services:
     image: dpage/pgadmin4:latest
     container_name: portafolio-pgadmin-dev
     restart: unless-stopped
-    env_file:
-      - .env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@pgadmin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-pgadmin123}
     ports:
       - "5050:80"
     volumes:

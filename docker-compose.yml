@@ -4,12 +4,10 @@ services:
     image: postgres:15-alpine
     container_name: portafolio-db
     restart: unless-stopped
-    env_file:
-      - .env
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:-portafolio_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-portafolio_password}
+      POSTGRES_DB: ${POSTGRES_DB:-portafolio_db}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -17,7 +15,7 @@ services:
     networks:
       - portafolio-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U portafolio_user -d portafolio_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-portafolio_user} -d ${POSTGRES_DB:-portafolio_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -32,13 +30,11 @@ services:
     ports:
       - "3000:3000"
       - "5555:5555" 
-    env_file:
-      - .env
     environment:
       NODE_ENV: production
-      DATABASE_URL: ${DATABASE_URL}
-      ADMIN_EMAIL: ${ADMIN_EMAIL}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://portafolio_user:portafolio_password@db:5432/portafolio_db}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
     depends_on:
       db:
         condition: service_healthy
@@ -51,11 +47,9 @@ services:
     image: dpage/pgadmin4:latest
     container_name: portafolio-pgadmin
     restart: unless-stopped
-    env_file:
-      - .env
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@pgadmin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-pgadmin123}
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
       - "5050:80"
